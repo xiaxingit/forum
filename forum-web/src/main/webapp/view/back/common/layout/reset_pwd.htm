@@ -1,0 +1,97 @@
+<div id="reset_pwd_model" class="modal hide in" style="display: none; position: absolute;top:300px;"   >
+ <div class="modal-header">
+    <button class="close" type="button" data-dismiss="modal" ></button>
+    <h4>
+                   修改密码
+    </h4>
+</div>
+<div class="modal-body">
+<form id="re_from_1" class="form-horizontal form-row-seperated">
+        <!-- 提示文字 begin -->
+		<div class="alert alert-error" id="repwd_alert" style="display:none;">
+		    <button class="close" data-dismiss="alert"></button>
+		    <strong id="repwd_alert_text">
+		    </strong>
+		</div>
+		<!-- 提示文字 end -->
+      <div class="control-group">
+	    <label class="control-label">您的原密码</label>
+		<div class="controls">
+		    <input id="role_id" style="display:none;" type="text"/>
+		    <input id="status" style="display:none;" type="text"/>
+		    <input  class="m-wrap" type="password" value="" size="18" style="height:20px;" id="old_pwd" name="old_pwd"></input>
+		</div>
+	  </div>
+	  <div class="control-group">
+	     <label class="control-label">您的新密码</label>
+		 <div class="controls">
+		    <input  class="m-wrap" type="password" value="" size="18" style="height:20px;" id="new_pwd" name="new_pwd"></input>
+		 </div>
+	  </div>
+	   <div class="control-group last">
+	     <label class="control-label">确定新密码</label>
+		 <div class="controls">
+		    <input  class="m-wrap" type="password" value="" size="18" style="height:20px;" id="new_pwd2" name="new_pwd2"></input>
+		 </div>
+	  </div>
+</form>
+</div>
+<div class="modal-footer" style="text-align:center;">
+    <a href="javascript:resetPwd();" id="resetpwd_btn" class="btn blue" ><i class="icon-ok"></i>确定修改</a>
+    <a  data-toggle="modal" href="#reset_pwd_model" onclick="clear_repwd()" class="btn blue" ><i class="icon-remove"></i>取消</a>
+</div>
+</div>
+<script>
+/**
+ * 修改密码
+ */
+function resetPwd(){
+	var old_pwd  =  $("#old_pwd").val();
+	var new_pwd  =  $("#new_pwd").val();
+	var new_pwd2 =  $("#new_pwd2").val();
+	if(old_pwd == "" || old_pwd == null || typeof(old_pwd)=='undefined'){
+		showErrRepwdAlert("原密码不能为空！");
+		return false;
+	}
+	if(new_pwd == "" || new_pwd == null || typeof(new_pwd)=='undefined'){
+		showErrRepwdAlert("新密码不能为空！");
+		return false;
+	}
+	if(new_pwd2 == "" || new_pwd2 == null || typeof(new_pwd2)=='undefined'){
+		showErrRepwdAlert("确认新密码不能为空！");
+		return false;
+	}
+	if(new_pwd != new_pwd2){
+		showErrRepwdAlert("两次新密码输入的不相同！");
+		return false;
+	}
+	$.ajax({
+        type: "POST",
+        url: "$request.getContextPath()/back/resetPwd.html",
+        data: {oldPwd:old_pwd,newPwd:new_pwd},
+        async: false,
+        success: function(data) {
+        	if(data == "1"){
+        	    //修改成功	
+        	    showErrRepwdAlert("修改成功！");
+        	    setTimeout(window.location.href = '$request.getContextPath()/back/logout.html',1000);
+        	}else{
+        		//原密码错误
+        		showErrRepwdAlert("原密码不正确！");
+        	}
+        },
+        error: function(request) {
+        }
+    });
+}
+//错误的提示框
+function showErrRepwdAlert(text){
+	$("#repwd_alert").show();
+	$("#repwd_alert_text").html(text);
+}
+function clear_repwd(){
+	$("#old_pwd").val("");
+	$("#new_pwd").val("");
+	$("#new_pwd2").val("");
+}
+</script>

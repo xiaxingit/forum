@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.forum.db.dao.SysParamDaoMapper" >
+   <resultMap type="org.forum.model.entity.SysParam" id="ParamMap">
+      <result column="id" property="id"/>
+      <result column="param_name" property="param_name"/>
+      <result column="param_value" property="param_value"/>
+      <result column="description" property="description"/>
+      <result column="create_time" property="create_time"/>
+   </resultMap>
+
+   <!-- 查询系统参数列表 -->
+   <select id="findParamList" resultMap="ParamMap">
+   select * from sys_param  where  1=1 
+    <if test="pname != null and pname != ''">
+    and param_name like concat('%',#{pname},'%')
+    </if>
+   order by create_time desc
+   limit #{min},#{size}
+   </select>
+   <!-- 查询系统参数总条数 -->
+   <select id="findParamListTotal" resultType="java.lang.Integer">
+    select count(*) from sys_param  where  1=1 
+    <if test="pname != null and pname != ''">
+    and param_name like concat('%',#{pname},'%')
+    </if>
+   </select>
+   <!-- 新增参数 -->
+   <insert id="addSysParam"  >
+   insert into sys_param values(null,#{param_name},#{param_value},#{description},now())
+   </insert>
+   <!-- 编辑参数 -->
+   <update id="editSysParam">
+   update sys_param set param_name = #{param_name},param_value = #{param_value},description = #{description} 
+   where id = #{id}
+   </update>
+   <!-- 删除参数 -->
+   <delete id="delSysParam">
+   delete from sys_param where id = #{id}
+   </delete>
+</mapper>

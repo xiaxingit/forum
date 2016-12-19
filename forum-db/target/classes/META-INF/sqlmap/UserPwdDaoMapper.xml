@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.forum.db.dao.UserPwdDaoMapper" >
+   <resultMap type="org.forum.model.entity.UserPwd" id="UserPwdMap">
+      <result column="user_id" property="user_id"/>
+      <result column="pwd" property="pwd"/>
+      <result column="update_time" property="update_time"/>
+   </resultMap>
+
+   <!-- 查询用户密码 -->
+   <select id="getUserPwdByUserId" resultMap="UserPwdMap" parameterType="java.lang.String">
+   select * from user_pwd where user_id = #{userId}
+   </select>
+   <!-- 新增用户密码 -->
+   <insert id="addUserPwd">
+    insert into user_pwd values(#{user_id},#{pwd},now())
+   </insert>
+   <!-- 删除用户密码 -->
+   <delete id="delUserPwd">
+    delete from user_pwd where user_id = #{user_id}
+   </delete>
+   <!-- 修改用户密码 -->
+   <update id="updateUserPwd">
+    update user_pwd set pwd = #{pwd},update_time = now() where user_id = #{user_id} 
+   </update>
+</mapper>

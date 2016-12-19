@@ -1,0 +1,17 @@
+eclipse.preferences.version=1
+encoding//src/main/java/com/cn/forum/controller/back/realm/MyShiroRealm.java=UTF-8
+encoding//src/main/java/com/cn/forum/controller/back/sysmanage/SysParamManageAction.java=UTF-8
+encoding//src/main/webapp/common/metronic.bootstrap/js/login.js=UTF-8
+encoding//src/main/webapp/view/back/common/layout/common_layout.htm=UTF-8
+encoding//src/main/webapp/view/back/common/layout/left.htm=UTF-8
+encoding//src/main/webapp/view/back/common/layout/pagination.htm=UTF-8
+encoding//src/main/webapp/view/back/common/layout/reset_pwd.htm=UTF-8
+encoding//src/main/webapp/view/back/common/layout/top.htm=UTF-8
+encoding//src/main/webapp/view/back/login/login.js=UTF-8
+encoding//src/main/webapp/view/back/main/index.htm=UTF-8
+encoding//src/main/webapp/view/back/sysmanage/authManage.htm=UTF-8
+encoding//src/main/webapp/view/back/sysmanage/logManage.htm=UTF-8
+encoding//src/main/webapp/view/back/sysmanage/paramManage.htm=UTF-8
+encoding//src/main/webapp/view/back/sysmanage/resourceManage.htm=UTF-8
+encoding//src/main/webapp/view/back/sysmanage/userManage.htm=UTF-8
+encoding//src/test/resources/META-INF/spring/log4j.properties=UTF-8

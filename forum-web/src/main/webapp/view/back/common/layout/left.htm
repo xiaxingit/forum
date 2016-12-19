@@ -1,0 +1,29 @@
+<!-- BEGIN SIDEBAR -->
+
+
+			<!-- BEGIN SIDEBAR MENU -->        
+
+			<ul class="page-sidebar-menu" >
+
+                #foreach($r in $resourceList)
+                   #if($r.parent_id == '0')
+                        <li class="">
+						<a href="javascript:;">
+						<i class="icon-cogs"></i> 
+						<span class="title">$r.name</span>
+						<span class="arrow "></span>
+						</a>
+						<ul class="sub-menu">
+						#foreach($r2 in $resourceList)
+						    #if($r2.parent_id == $r.id)
+							<li >
+								<a href="javascript:create_tab($r2.id,'$r2.name','$request.getContextPath()$r2.url');">$r2.name</a>
+							</li>
+							#end
+						#end
+						</ul>
+					    </li>
+                   #end
+                #end
+			</ul>
+		<!-- END SIDEBAR -->

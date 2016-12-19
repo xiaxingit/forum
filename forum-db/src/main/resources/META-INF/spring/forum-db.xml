@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:osgi="http://www.springframework.org/schema/osgi"
+	xsi:schemaLocation="
+	     http://www.springframework.org/schema/beans 
+	     http://www.springframework.org/schema/beans/spring-beans.xsd
+         http://www.springframework.org/schema/osgi 
+         http://www.springframework.org/schema/osgi/spring-osgi.xsd
+         "
+	default-autowire="byName">
+	
+	<!-- 用户类 -->
+	<bean id="userDaoMapper" class="org.mybatis.spring.mapper.MapperFactoryBean"
+		parent="persist.mybatis.parentMapper">
+		<property name="mapperInterface" value="org.forum.db.dao.UserDaoMapper" />
+	</bean>
+	<!-- 用户密码类 -->
+	<bean id="userPwdDaoMapper" class="org.mybatis.spring.mapper.MapperFactoryBean"
+		parent="persist.mybatis.parentMapper">
+		<property name="mapperInterface" value="org.forum.db.dao.UserPwdDaoMapper" />
+	</bean>
+	<!-- 资源类 -->
+	<bean id="resourceDaoMapper" class="org.mybatis.spring.mapper.MapperFactoryBean"
+		parent="persist.mybatis.parentMapper">
+		<property name="mapperInterface" value="org.forum.db.dao.ResourceDaoMapper" />
+	</bean>
+	<!-- 角色类 -->
+	<bean id="roleDaoMapper" class="org.mybatis.spring.mapper.MapperFactoryBean"
+		parent="persist.mybatis.parentMapper">
+		<property name="mapperInterface" value="org.forum.db.dao.RoleDaoMapper" />
+	</bean>
+	<!-- 日志类 -->
+	<bean id="logDaoMapper" class="org.mybatis.spring.mapper.MapperFactoryBean"
+		parent="persist.mybatis.parentMapper">
+		<property name="mapperInterface" value="org.forum.db.dao.LogDaoMapper" />
+	</bean>
+	<!-- 系统参数 -->
+	<bean id="sysParamDaoMapper" class="org.mybatis.spring.mapper.MapperFactoryBean"
+		parent="persist.mybatis.parentMapper">
+		<property name="mapperInterface" value="org.forum.db.dao.SysParamDaoMapper" />
+	</bean>
+</beans>

@@ -1,0 +1,475 @@
+#set($layout="view/back/common/layout/common_layout.htm")
+<!-- model   begin -->
+<div id="portlet-config" class="modal hide in" style="display: none;"   aria-hidden="true" data-backdrop="static">
+ <div class="modal-header">
+    <button class="close" type="button" data-dismiss="modal" id="close_model"></button>
+    <h4>
+                   编辑角色
+    </h4>
+</div>
+<div class="modal-body">
+<form id="re_from_1" class="form-horizontal form-row-seperated">
+      <div class="control-group">
+	    <label class="control-label">角色名称</label>
+		<div class="controls">
+		    <input id="role_id" style="display:none;" type="text"/>
+		    <input id="status" style="display:none;" type="text"/>
+		    <input  class="m-wrap" type="text" value="" size="18" style="height:30px;" id="role_name" name="role_name"></input>
+		</div>
+	  </div>
+	   <div class="control-group last">
+	    <label class="control-label">角色描述</label>
+		<div class="controls">
+		    <textarea  class="m-wrap" rows="3" cols="10" id="description" name="description"></textarea>
+		</div>
+	  </div>
+</form>
+</div>
+<div class="modal-footer" style="text-align:center;">
+    <a href="javascript:ok_add();" id="okAdd" class="btn blue" ><i class="icon-ok"></i>确定新增</a>
+    <a href="javascript:ok_edit();" id="okEdit" class="btn blue" style="display:none;"><i class="icon-ok"></i>确定修改</a>
+    <a href="javascript:hide_dele_div()" class="btn blue" ><i class="icon-remove"></i>取消</a>
+</div>
+</div>
+
+<div id="isdel_model" class="modal hide in" style="display: none;"  aria-hidden="true" data-backdrop="static">
+ <div class="modal-header">
+    <button class="close" type="button" data-dismiss="modal" id="close_del_model"></button>
+    <h4>
+                    系统提示
+    </h4>
+</div>
+<div class="modal-body">
+   <p style="font-size:18px;">
+            确定删除吗？
+   </p>
+   </div>
+   <div class="modal-footer" style="text-align:center;">
+       <a href="javascript:ok_dele();" class="btn blue" ><i class="icon-ok"></i>确定删除</a>
+       <a href="javascript:hide_dele_div()" class="btn blue" ><i class="icon-remove"></i>取消</a>
+   </div>
+</div>
+<!-- model  end -->
+<table style="width:100%;height:100%;margin:0px;">
+ <tr>
+    <td style="width:70%;height:100%;position:fixed;top:0px;left:0px;">
+     <div class="portlet box" >
+		
+	    <div class="portlet-body fuelux">
+	      <a id="add_role_btn" class='btn blue' data-toggle="modal" href="#portlet-config" type='button'><i class="icon-plus"></i>新增角色</a>
+	      <table class="table table-bordered  table-hover">
+	        <thead>
+	         <tr>
+	            <th>序号</th><th>角色名称</th><th>角色描述</th><th>状态</th><th width="25%">操作</th>
+	         </tr>
+	        </thead>
+	        <tbody id="table_body">
+	        
+	        </tbody>
+	      </table>
+	      <div class="pagination pagination-small" style="width:100%;text-align:center;">
+	         <ul id="fy_div" class="bootpag">
+	          <li><a href="#">«</a></li>
+	          <li><a href="#">»</a></li>
+	         </ul>
+	      </div>
+	    </div>
+	</div>
+    </td>
+    <td style="width:30%;height:100%;position:fixed;top:0px;right:0px;border-left:1px solid #ccc;">
+		 <div class="portlet box">
+			
+			<div class="portlet-body fuelux">
+				<ul id="resource_tree" class="ztree"></ul>
+			</div>
+		</div>
+    </td>
+ </tr>
+</table>
+<script>
+$(document).ready(function(){
+	
+	load_tree();
+	load_rolelist(currPage,currSize);
+	
+	
+});
+/**
+ * 加载树节点
+ */
+function load_tree(){
+	var data = exec_ajax("/sysmanage/getResourceList.html",null,create_tree);
+}
+function create_tree(data){
+	 var setting = {
+				check: {
+					enable: true
+				},
+				data: {
+					simpleData: {
+						enable: true
+					}
+				},
+				callback: {
+					beforeCheck: onCheck
+				}
+			};
+	 var jsonData = "[";
+	 $.each(data, function(index,obj){      
+		 jsonData += "{\"id\":\""+obj.id+"\",\"pId\":\""+obj.parent_id+"\",\"name\":\""+obj.name+"\",\"open\":true},";
+	 });
+	 jsonData = jsonData.substr(0,jsonData.length-1);
+	 jsonData += "]";
+	 var tree_json = eval("("+jsonData+")");
+	 $.fn.zTree.init($("#resource_tree"), setting, tree_json);
+}
+/**
+ * 加载角色列表
+ */
+
+function load_rolelist(page,size){
+	getTotal();
+	$.ajax({
+        type: "POST",
+        url: "$request.getContextPath()/sysmanage/getAllRoleList.html",
+        data:{currPage:page,Size:size},
+        async: false,
+        success: function(data) {
+        	currData = data;
+        	var html = "";
+        	$.each(data, function(index,obj){   
+        		html += "<tr>";
+        		html += "<td>"+((index+1)+(currPage-1)*10)+"</td>";
+        		html += "<td>"+obj.role_name+"</td><td>"+obj.description+"</td><td>";
+        		var statu_cz_btn = "";
+        		if(obj.status == 1){
+        			html += "<span class='label label-success'>正常</span>";
+        			statu_cz_btn = "<button onclick='change_en("+obj.role_id+",0)' class='btn red' type='button'>禁用</button>";
+        		}else{
+        			html += "<span class='label label-important'>禁用</span>";
+        			statu_cz_btn = "<button onclick='change_en("+obj.role_id+",1)' class='btn green' type='button'>启用</button>";
+        		}
+        	    var qx_btn = "&nbsp;<button class='btn blue' onclick='qx_setting("+obj.role_id+")' type='button'>权限</button>";
+        	    var edit_btn = "&nbsp;<button class='btn' onclick='edit("+obj.role_id+")' type='button'>编辑</button>";
+        	    var del_btn = "&nbsp;<button class='btn purple' data-toggle='modal' href='#isdel_model' onclick='bj_del("+obj.role_id+")' type='button'>删除</button>";
+        		html += "</td><td>"+ statu_cz_btn + qx_btn + edit_btn + del_btn +"</td>";
+        		html += "</tr>";
+        	});
+        	$("#table_body").html(html);
+        	create_pagination();
+        },
+        error: function(request) {
+        }
+    });
+}
+var currData = null;    //当前table数据
+var currPage  = 1;  //当前页
+var currSize  = 5; //当前页显示的条数
+var role_total = 0; //总条数
+var del_role_id = 0; //需要删除的角色ID
+var sel_qx_roleid = 0;  //当前编辑权限的角色ID
+/**
+ * 获得总条数
+ */
+function getTotal(){
+	$.ajax({
+        type: "POST",
+        url: "$request.getContextPath()/sysmanage/getAllRoleListTotal.html",
+        data: {},
+        async: false,
+        success: function(data) {
+        	if(data != null && data != ""){
+        	role_total  = parseInt(data);
+        	}
+        },
+        error: function(request) {
+        }
+    });
+}
+/**
+ * 分页标签
+ */
+function create_pagination(){
+	  if(role_total != 0){
+	      var html = "";
+	      var max_page = role_total%currSize==0?role_total/currSize:(role_total/currSize)+1;
+	      max_page = parseInt(max_page);
+	      if(currPage != 1){
+		      html += '<li class="prev" data-lp="1"><a href="javascript:topage(1);">«</a></li>';
+		      //html += '<li data-lp="1"><a href="javascript:topage(1);">1</a></li>';
+	      }else{
+	    	  html += '<li class="prev disabled" data-lp="1"><a href="javascript:topage(1);">«</a></li>';	
+	    	  //html += '<li class="disabled" data-lp="1"><a href="javascript:topage(1);">1</a></li>';
+	      }
+	      var arr = new Array(currPage -2 ,currPage -1 ,currPage , currPage +1 ,currPage + 2);
+	      for(var i = 0;i<arr.length;i++){
+	    	  if(arr[i] > 0 && arr[i] <= max_page){
+	    		  if(currPage != arr[i]){
+	   	    	   html += '<li data-lp="'+arr[i]+'"><a href="javascript:topage('+arr[i]+');">'+arr[i]+'</a></li>';
+	   	    	  }else{
+	       		   html += '<li class="disabled" data-lp="'+arr[i]+'"><a href="javascript:topage('+arr[i]+');">'+arr[i]+'</a></li>';
+	   	    	  }
+	    	  }
+	      }
+	    /*  for(var i= 2;i<=max_page;i++){
+	    	  if(currPage != i){
+	    	   html += '<li data-lp="'+i+'"><a href="javascript:topage('+i+');">'+i+'</a></li>';
+	    	  }else{
+    		   html += '<li class="disabled" data-lp="'+i+'"><a href="javascript:topage('+i+');">'+i+'</a></li>';
+	    	  }
+	      } */
+	      if(currPage != max_page){
+	    	  html += '<li class="next" data-lp="'+max_page+'"><a href="javascript:topage('+max_page+');">»</a></li>';
+	      }else{
+	    	  html += '<li class="next disabled" data-lp="'+max_page+'"><a href="javascript:topage('+max_page+');">»</a></li>';
+	      }
+	      $("#fy_div").html(html);
+	  }
+}
+/**
+ * 分页查询
+ */
+function topage(page){
+	currPage = page;
+	load_rolelist(currPage,currSize);
+}
+/**
+ * 隐藏模态框
+ */
+function hide_dele_div(){
+	 $("#role_name").val("");
+	 $("#description").val("");
+	 $("#role_id").val("");
+	 $("#status").val("");
+	 $("#okAdd").show();
+	 $("#okEdit").hide();
+	 del_role_id = 0;
+	 $("#close_model").trigger("click");
+	 $("#close_del_model").trigger("click");
+}
+/**
+ * 确定添加
+ */
+function ok_add(){
+	var rn = $("#role_name").val();
+	var dc = $("#description").val();
+	$.ajax({
+        type: "POST",
+        url: "$request.getContextPath()/sysmanage/addRole.html",
+        data: {role_name:rn,descr:dc},
+        async: false,
+        success: function(data) {
+        	if(data == "1"){
+        		hide_dele_div(); //隐藏模态框
+        		load_rolelist(currPage,currSize);
+        	}
+        },
+        error: function(request) {
+        }
+    });
+}
+/**
+ * 禁用/启用
+ */
+function change_en(role_id,is_en){
+	$.ajax({
+        type: "POST",
+        url: "$request.getContextPath()/sysmanage/changeEnable.html",
+        data: {role_id:role_id,en:is_en},
+        async: false,
+        success: function(data) {
+        	if(data == "1"){
+        		load_rolelist(currPage,currSize);
+        	}
+        },
+        error: function(request) {
+        }
+    });
+}
+/**
+ * 编辑
+ */
+function edit(rid){
+	$.each(currData, function(index,obj){   
+		if(obj.role_id == rid){
+			 $("#add_role_btn").trigger("click");
+			 $("#role_id").val(obj.role_id);
+			 $("#role_name").val(obj.role_name);
+			 $("#description").val(obj.description);
+			 $("#status").val(obj.status);
+			 $("#okAdd").hide();
+			 $("#okEdit").show();
+		}
+	});
+	
+}
+/**
+ * 确定修改
+ */
+function ok_edit(){
+	var role_id = $("#role_id").val();
+	var role_name = $("#role_name").val();
+	var description = $("#description").val();
+	var status = $("#status").val();
+	$.ajax({
+        type: "POST",
+        url: "$request.getContextPath()/sysmanage/updateRole.html",
+        data: {role_id:role_id,role_name:role_name,description:description,status:status},
+        async: false,
+        success: function(data) {
+        	if(data == "1"){
+        		hide_dele_div();
+        		load_rolelist(currPage,currSize);
+        	}
+        },
+        error: function(request) {
+        }
+    });
+}
+function bj_del(id){
+	del_role_id = id;
+}
+/**
+ * 确认删除
+ */
+function ok_dele(){
+	$.ajax({
+        type: "POST",
+        url: "$request.getContextPath()/sysmanage/deleteRole.html",
+        data: {role_id:del_role_id},
+        async: false,
+        success: function(data) {
+        	if(data == "1"){
+        		hide_dele_div();
+        		load_rolelist(currPage,currSize);
+        	}
+        },
+        error: function(request) {
+        }
+    });
+}
+/**
+ * 获得角色的资源列表
+ */
+function qx_setting(id){
+	sel_qx_roleid = id;
+	$.ajax({
+        type: "POST",
+        url: "$request.getContextPath()/sysmanage/getResourceByRoleId.html",
+        data: {role_id:id},
+        async: false,
+        success: function(data) {
+        	sel_nodes(data);
+        },
+        error: function(request) {
+        }
+    });
+}
+/**
+ * 勾选资源
+ */
+var is_pl = false;
+function sel_nodes(data){
+	is_pl = true;
+	var zTree = $.fn.zTree.getZTreeObj("resource_tree");
+	zTree.checkAllNodes(false); //取消所有勾选
+	var nodes = zTree.getNodes();
+	$.each(data, function(index,obj){   
+		for(var i =0;i<nodes.length;i++){
+			var childNode = nodes[i].children;
+			for(var j =0;j<childNode.length;j++){
+				if(childNode[j].id == obj){
+					zTree.checkNode(childNode[j], true, true, true);
+				}
+			}
+		}
+	});
+	is_pl = false;
+}
+/**
+ * 资源列表勾选事件
+ */
+function onCheck(treeId, treeNode) {
+	var parent_node = treeNode.getParentNode();
+	var p_childnodes = null;
+	var c_childnodes = null;
+	if(parent_node != null){
+	   p_childnodes = parent_node.children;
+	}else{
+	   c_childnodes = treeNode.children;
+	}
+	var sel_index = 0;
+	//如果勾选了父节点  那么所有子节点都要添加
+	if(sel_qx_roleid != 0 && is_pl == false){
+		if(treeNode.checked == true){    //勾选了该项
+			if(p_childnodes != null){
+				for(var i =0;i<p_childnodes.length;i++){
+					if(p_childnodes[i].checked == true){
+						sel_index ++;
+					}
+				}
+			    if(sel_index == 1){            //如果节点全部取消勾选   则删除父节点
+			    	delRR(sel_qx_roleid,parent_node.id);
+			    }
+				delRR(sel_qx_roleid,treeNode.id);
+			}else{
+				//取消勾选了父菜单  批量删除子菜单资源
+				delRR(sel_qx_roleid,treeNode.id);
+				for(var i =0;i<c_childnodes.length;i++){
+					delRR(sel_qx_roleid,c_childnodes[i].id);
+				}
+			}
+		}else{                           //取消勾选
+			if(p_childnodes != null){
+				for(var i =0;i<p_childnodes.length;i++){
+					if(p_childnodes[i].checked == true){
+						sel_index ++;
+					}
+				}
+				if(sel_index == 0){            //如果只有一个节点被选中  则添加父节点
+					addRR(sel_qx_roleid,parent_node.id);
+				}
+				addRR(sel_qx_roleid,treeNode.id);
+			}else{
+				//勾选了父菜单  批量添加子菜单资源
+				addRR(sel_qx_roleid,treeNode.id);
+				for(var i =0;i<c_childnodes.length;i++){
+					addRR(sel_qx_roleid,c_childnodes[i].id);
+				}
+			}
+		}
+	}
+}	
+/**
+ * 新增角色资源
+ */
+function addRR(role_id,resource_id){
+	$.ajax({
+        type: "POST",
+        url: "$request.getContextPath()/sysmanage/addRoleResource.html",
+        data: {role_id:role_id,r_id:resource_id},
+        async: false,
+        success: function(data) {
+        },
+        error: function(request) {
+        }
+    });
+}
+/**
+ * 删除角色资源
+ */
+function delRR(role_id,resource_id){
+	$.ajax({
+        type: "POST",
+        url: "$request.getContextPath()/sysmanage/delRoleResource.html",
+        data: {role_id:role_id,r_id:resource_id},
+        async: false,
+        success: function(data) {
+        },
+        error: function(request) {
+        }
+    });
+	
+}
+</script>
+	

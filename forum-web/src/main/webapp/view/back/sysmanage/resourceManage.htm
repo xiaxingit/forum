@@ -1,0 +1,272 @@
+#set($layout="view/back/common/layout/common_layout.htm")
+<style>
+
+</style>
+<!-- model   begin -->
+<div id="portlet-config" class="modal hide in" style="display: none;"  aria-hidden="true" data-backdrop="static">
+ <div class="modal-header">
+    <button class="close" type="button" data-dismiss="modal" id="close_del_model"></button>
+    <h4>
+                    系统提示
+    </h4>
+</div>
+<div class="modal-body">
+   <p style="font-size:18px;">
+            确定删除吗？
+   </p>
+   </div>
+   <div class="modal-footer" style="text-align:center;">
+       <a href="javascript:ok_dele();" class="btn blue" ><i class="icon-ok"></i>确定删除</a>
+       <a href="javascript:hide_dele_div()" class="btn blue" ><i class="icon-remove"></i>取消</a>
+   </div>
+</div>
+<!-- model  end -->
+<table style="width:100%;height:100%;">
+  <tr>
+   <td style="width:20%;height:100%;position:fixed;top:0px;left:0px;">
+    <div class="portlet box" >
+	
+	<div class="portlet-body fuelux">
+		<ul class="tree" id="tree_1">
+			
+		</ul>
+	</div>
+</div>
+   </td>
+   <td style="width:80%;height:100%;position:fixed;top:0px;right:0px;border-left:1px solid #ccc;">
+      <div class="portlet box">
+		
+		<div class="portlet-body form">
+		    <div id="succ_div" class="alert alert-success" style="display:none;">
+			    <button class="close" data-dismiss="alert"></button>
+			    <strong id="succ_div_text">
+			                新增成功！
+			    </strong>
+			</div>
+			<form id="re_from_1" class="form-horizontal form-row-seperated">
+			  <div class="control-group" >
+			    <label class="control-label">父菜单</label>
+				<div class="controls">
+				    <!-- 隐藏的主键id -->
+				    <input id="resource_id" name="id" type="text" style="display:none;"/>
+				    <select class="small m-wrap" tabindex="1" id="select_1" name="parent_id">
+				    </select>
+				</div>
+			  </div>
+			   <div class="control-group">
+			    <label class="control-label">资源名称</label>
+				<div class="controls">
+				    <input  class="m-wrap" type="text" value="" size="18" style="height:30px;" id="name" name="name"></input>
+				</div>
+			  </div>
+			   <div class="control-group">
+			    <label class="control-label">资源地址</label>
+				<div class="controls">
+				    <input  class="m-wrap" type="text" value="" size="18" style="height:30px;" id="url" name="url"></input>
+				</div>
+			  </div>
+			  <div class="control-group">
+			    <label class="control-label">资源描述</label>
+				<div class="controls">
+				    <textarea  class="m-wrap"   cols="10" rows="3" id="describe" name="describe"></textarea>
+				</div>
+			  </div>
+			  <div class="control-group last" >
+			      <div class="controls">
+			       <a id="add_btn" href="javascript:add_resource();"  class="btn blue">
+					<i class="icon-ok"></i>
+					添加
+				   </a>
+				   <a id="edit_btn" href="javascript:edit_resource();"  class="btn blue" style="display:none;">
+					<i class="icon-ok"></i>
+					确认修改
+				   </a>
+				   <a href="javascript:clear_form();"  class="btn blue">
+					<i class="icon-refresh"></i>
+					重置
+				   </a>
+				   </div>
+			  </div> 
+			</form>
+		</div>
+     </div>
+   </td>
+  </tr>
+</table>
+
+
+
+<script>
+$(document).ready(function(){
+	
+	App.init();
+	  
+	loadTreeDate();
+	
+});
+/**
+ * 加载树节点
+ */
+var all_data = null;
+function loadTreeDate(){
+	$.ajax({
+	    url: "$request.getContextPath()/sysmanage/getResourceList.html" ,
+	    type: 'get',
+	    dataType: 'json',
+	    success: function(data){
+	    	 all_data = data;
+	    	 var list = "";
+	    	 $.each(data, function(index,obj){      
+	    	      if(obj.parent_id == '0'){
+					  var parent_html = '<li><a href="#" id="branch_'+obj.id+'" data-role="branch" onclick="click_branch('+obj.id+')" class="tree-toggle in" data-value="Bootstrap_Tree">';
+					  parent_html += obj.name;
+					  parent_html += '&nbsp;<i class="icon-trash" data-toggle="modal" href="#portlet-config" onclick="dele('+obj.id+')" style="float:right;"></i><i class="icon-edit" style="float:right;" onclick="toform('+obj.id+')"></i></a>';
+					  parent_html += '<ul class="branch in" id="ul_'+obj.id+'">';
+					  $.each(data, function(index2,obj2){    
+						  if(obj2.parent_id == obj.id){
+							  parent_html += '<li><a href="#" data-role="leaf">'+obj2.name+
+							  '&nbsp;<i class="icon-trash" onclick="dele('+obj2.id+')" href="#portlet-config" data-toggle="modal" style="float:right;"></i><i class="icon-edit" onclick="toform('+obj2.id+')" style="float:right;"></i></a></li>';
+						  }
+					  });
+					  parent_html += '</ul>';
+					  parent_html += '</li>';
+					  list += parent_html;
+	    	      }
+	    	 });   
+	    	 $("#tree_1").html(list);
+	    	 //加载下拉菜单
+	    	 load_parent_select();
+	    }
+	});
+}
+/**
+ * 点击资源父节点
+ */
+function click_branch(id,obj){
+    	 
+           if($("#ul_"+id).hasClass("in")){
+        	   $("#ul_"+id).removeClass("in");
+        	   $("#ul_"+id).addClass("closed");
+        	   $("#branch_"+id).removeClass("in");
+        	   $("#branch_"+id).addClass("closed");
+           }else if($("#ul_"+id).hasClass("closed")){
+        	   $("#ul_"+id).removeClass("closed");
+        	   $("#ul_"+id).addClass("in");
+        	   $("#branch_"+id).removeClass("closed");
+        	   $("#branch_"+id).addClass("in");
+           }
+         
+}
+/**
+ * 加载父节点下拉框
+ */
+function load_parent_select(){
+	 var select_html  = "<option value='0'>无</option>";
+	 $.each(all_data, function(index,obj){      
+	      if(obj.parent_id == '0'){
+	    	  select_html += "<option value='"+obj.id+"'>"+obj.name+"</option>";
+	      }
+	 });
+	 $("#select_1").html(select_html);
+}
+/**
+ * 添加资源
+ */
+function add_resource(){
+	$.ajax({
+        type: "POST",
+        url: "$request.getContextPath()/sysmanage/addResource.html",
+        data:$('#re_from_1').serialize(),
+        async: false,
+        success: function(data) {
+           if(data == "1"){
+        	   showSuccDiv("新增成功！");
+        	   clear_form();  //清空表单
+        	   loadTreeDate();
+           }
+        },
+        error: function(request) {
+           alert("异常");
+        }
+    });
+}
+/**
+ * 清空表单
+ */
+function clear_form(){
+	$("#select_1").val("0");
+	$("#name").val("");
+	$("#url").val("");
+	$("#describe").val("");
+	$("#add_btn").show();
+	$("#edit_btn").hide();
+}
+/**
+ * 准备编辑资源
+ */
+function toform(id){
+	 $.each(all_data, function(index,obj){      
+		if(id == obj.id){
+			$("#resource_id").val(obj.id);
+			$("#select_1").val(obj.parent_id);
+			$("#name").val(obj.name);
+			$("#url").val(obj.url);
+			$("#describe").val(obj.describe);
+			$("#add_btn").hide();
+			$("#edit_btn").show();
+		} 
+	 });
+}
+/**
+ * 提交编辑资源
+ */
+function edit_resource(){
+	$.ajax({
+        type: "POST",
+        url: "$request.getContextPath()/sysmanage/editResource.html",
+        data:$('#re_from_1').serialize(),
+        async: false,
+        success: function(data) {
+           if(data == "1"){
+        	   showSuccDiv("修改成功！");
+        	   clear_form();  //清空表单
+        	   loadTreeDate();
+           }
+        },
+        error: function(request) {
+           alert("异常");
+        }
+    });
+}
+/**
+ * 删除资源
+ */
+var delete_id = -1;
+function dele(r_id){
+	delete_id = r_id;
+}
+function ok_dele(){
+	hide_dele_div();
+	$.ajax({
+        type: "POST",
+        url: "$request.getContextPath()/sysmanage/deleResource.html",
+        data: {id:delete_id},
+        async: false,
+        success: function(data) {
+           if(data == "1"){
+        	   loadTreeDate();
+           }
+        },
+        error: function(request) {
+           alert("异常");
+        }
+    });
+}
+function hide_dele_div(){
+	 $("#close_del_model").trigger("click");
+}
+function showSuccDiv(text){
+	 $("#succ_div_text").html(text);
+	 $("#succ_div").show();
+}
+</script>

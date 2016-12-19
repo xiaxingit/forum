@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.forum.db.dao.ResourceDaoMapper" >
+   <resultMap  id="BaseMap" type="org.forum.model.entity.ResourceInfo">
+    <result column="id" property="id"/>
+    <result column="name" property="name"/>
+    <result column="url" property="url"/>
+    <result column="parent_id" property="parent_id"/>
+    <result column="resouce_order" property="resource_order"/>
+    <result column="describe" property="describe"/>
+   </resultMap>
+   <!-- 获得所有资源 -->
+   <select id="getAllResource" resultMap="BaseMap" parameterType="java.lang.String">
+     SELECT * FROM RESOURCE_INFO
+      <if test="_parameter != null">
+       WHERE ID IN (SELECT RESOURCE_ID FROM ROLE_RESOURCE WHERE ROLE_ID IN (
+      SELECT ROLE_ID FROM USER_ROLE  
+      WHERE USER_ID = #{_parameter}
+      ))
+      </if>
+     
+   </select>
+   <!-- 添加资源 -->
+   <insert id="addResource" >
+      insert into RESOURCE_INFO 
+      values(null,#{name},#{url},#{parent_id},#{resource_order},#{describe})
+   </insert>
+   <!-- 修改资源 -->
+   <update id="editResource">
+     update RESOURCE_INFO r set   
+     r.name=#{name,jdbcType=VARCHAR},
+     r.url=#{url,jdbcType=VARCHAR},
+     r.parent_id=#{parent_id},
+     r.resource_order=#{parent_id},
+     r.describe =#{describe,jdbcType=VARCHAR} 
+     where id = #{id}
+   </update>
+   <!-- 删除资源 -->
+   <delete id="deleResource">
+    delete from RESOURCE_INFO where id = #{id} or parent_id = #{id}
+   </delete>
+   <!-- 查询资源信息 根据资源路径 -->
+   <select id="findResourceByUrl" resultType="java.lang.String">
+    select name from resource_info where url like concat('%',#{url},'%') limit 0,1
+   </select>
+</mapper>

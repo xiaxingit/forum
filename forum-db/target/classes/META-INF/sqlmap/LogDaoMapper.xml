@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.forum.db.dao.LogDaoMapper" >
+   <resultMap type="org.forum.model.entity.Log" id="LogMap">
+      <result column="id" property="id"/>
+      <result column="log_name" property="log_name"/>
+      <result column="log_url" property="log_url"/>
+      <result column="user_id" property="user_id"/>
+      <result column="ip" property="ip"/>
+      <result column="create_time" property="create_time"/>
+   </resultMap>
+
+  
+   <!-- 新增用户密码 -->
+   <insert id="addLog">
+    insert into log values(null,#{log_name},#{log_url},#{user_id},#{ip},now())
+   </insert>
+   <!-- 查询日志列表 -->
+   <select id="findLogByPage" resultMap="LogMap">
+    select l.id,
+           l.log_name,
+           l.log_url,
+           u.user_name as user_id,
+           l.ip,
+           l.create_time  
+           from log l
+    inner join user_info u on u.user_id = l.user_id
+    where 1=1
+    <if test="username != null and username != ''">
+      and (u.user_name like concat('%',#{username},'%') or u.name like concat('%',#{username},'%'))
+    </if>
+    
+    <if test="startT != null and startT != '' and endT != null and endT != ''">
+     <![CDATA[
+      and l.create_time >=   
+             date_format(#{startT},'%Y-%m-%d') 
+             and  
+          l.create_time <=  date_sub(date_format(#{endT},'%Y-%m-%d'),interval -1 day)
+       ]]>
+    </if>   
+    order by l.create_time desc
+    limit #{min},#{size}
+   </select> 
+   <!-- 查询日志总条数 -->
+   <select id="findLogTotal" resultType="java.lang.Integer">
+    select count(*)  from log l
+    inner join user_info u on u.user_id = l.user_id
+     <if test="username != null and username != ''">
+      and (u.user_name like concat('%',#{username},'%') or u.name like concat('%',#{username},'%'))
+     </if>
+     <if test="startT != null and startT != '' and endT != null and endT != ''">
+      <![CDATA[
+      and l.create_time >=   
+             date_format(#{startT},'%Y-%m-%d') 
+             and  
+          l.create_time <=  date_sub(date_format(#{endT},'%Y-%m-%d'),interval -1 day)
+       ]]>
+    </if>
+   </select>
+</mapper>

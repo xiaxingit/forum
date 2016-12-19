@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.forum.db.dao.UserDaoMapper" >
+   <resultMap type="org.forum.model.entity.UserInfo" id="BaseMap">
+      <result column="user_id" property="user_id"/>
+      <result column="user_name" property="user_name"/>
+      <result column="name" property="name"/>
+      <result column="gender" property="gender"/>
+      <result column="address" property="address"/>
+      <result column="birthday" property="birthday"/>
+      <result column="industry" property="industry"/>
+      <result column="position" property="position"/>
+      <result column="autograph" property="autograph"/>
+      <result column="head_image" property="head_image"/>
+      <result column="phone" property="phone"/>
+      <result column="email" property="email"/>
+      <result column="label" property="label"/>
+      <result column="status" property="status"/>
+      <result column="last_login_time" property="last_login_time"/>
+      <result column="userRole" property="userRole"/>
+   </resultMap>
+   <resultMap type="org.forum.model.entity.UserPwd" id="UserPwdMap">
+      <result column="user_id" property="user_id"/>
+      <result column="pwd" property="pwd"/>
+      <result column="update_time" property="update_time"/>
+   </resultMap>
+   <!-- 查询用户信息 根据用户名 -->
+   <select id="getUserInfoByName" resultMap="BaseMap" parameterType="java.lang.String">
+    select * from user_info where user_name = #{name}  limit 0,1
+   </select>
+  
+   <!-- 修改用户信息 -->
+   <update id="updateUserInfo"  >
+   update user_info set 
+         name=#{name},
+         gender=#{gender},
+         address=#{address},
+         birthday=#{birthday},
+         industry=#{industry},
+         position=#{position},
+         autograph=#{autograph},
+         head_image=#{head_image},
+         phone=#{phone},
+         email=#{email},
+         label=#{label},
+         status=#{status},
+         last_login_time= date_format(#{last_login_time},'%Y-%m-%d %T') 
+   where user_id = #{user_id}
+   </update>
+   <!-- 查询用户总条数 -->
+   <select id="findUserTotal" resultType="java.lang.Integer">
+      select count(*) from user_info
+   </select>
+   <!-- 查询用户列表  分页查询 -->
+   <select id="findUserList" resultMap="BaseMap">
+      select u.*,(select group_concat(r.role_name) from role_info r where role_id in (select role_id from user_role where user_id=u.user_id)) as userRole from user_info u order by u.user_id desc limit #{min},#{size} 
+   </select>
+   <!-- 新增用户 -->
+   <insert id="addUserInfo" >
+    <![CDATA[
+    insert into user_info values(null,
+    #{user_name},
+    #{name},
+    #{gender},
+    #{address},
+    #{birthday},
+    #{industry},
+    #{position},
+    #{autograph},
+    #{head_image},
+    #{phone},
+    #{email},
+    #{label},
+    #{status},
+    null
+    );
+    ]]>
+   </insert>
+   <!-- 查询最大的用户ID -->
+   <select id="selectMaxUserId" resultType="java.lang.Integer">
+   select max(user_id) as user_id  from user_info limit 0,1;
+   </select>
+   <!-- 删除用户 -->
+   <delete id="delUserInfo">
+    delete from user_info where user_id = #{user_id}
+   </delete>
+   <!-- 修改用户状态 -->
+   <update id="updateUserStatus">
+    update user_info  set status = #{status}  where user_id = #{user_id}
+   </update>
+</mapper>

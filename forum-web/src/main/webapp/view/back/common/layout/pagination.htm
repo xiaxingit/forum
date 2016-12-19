@@ -1,0 +1,43 @@
+   <!-- 分页begin -->
+      #if($page == 1)
+         #set($min=1)
+      #else 
+         
+         #set($min= (($page - 1) * $size) + 1)
+      #end
+      #set($max=($page * $size))
+      #if($max > $total)
+         #set($max=$total)
+      #end
+   
+      <span style="position: relative;left: 10px;border:0px solid red;">当前显示$!min 至 $!max ,共 $!total 条记录</span>
+      <div class="dataTables_paginate paging_bootstrap pagination" style="position: relative;top:-20px;width:100%;text-align:center;border:0px solid blue;">
+     
+      <ul class="bootpag" >
+          #if($page >= 0 )
+             #set($pre1=($page - 2))
+             #set($pre2=($page - 1))
+             #set($pre3=($page))
+             #set($pre4=($page+1))
+             #set($pre5=($page+2))
+             #set($nums=[$pre1,$pre2,$pre3,$pre4,$pre5])
+          #end
+          #if($page > 1)
+                <li><a href="javascript:fycx(1)">首页</a></li>
+               <li><a href="javascript:fycx($page - 1)">上一页</a></li>
+          #end
+          #foreach($index in $nums)
+             #if($page == $index)
+                 <li class="disabled"><a href="javascript:void(0);">$index</a></li>
+             #elseif($index > 0 && $index <= $pageMax)
+                 <li><a href="javascript:fycx($index)">$index</a></li>
+             #end
+          #end
+          #if($page < $pageMax)
+             <li><a href="javascript:fycx($page + 1)">下一页</a></li>
+             <li><a href="javascript:fycx($pageMax)">尾页</a></li>
+          #end
+		  <li ><a  href="javascript:void(0);" > $page/$pageMax 页</a></li>
+		</ul>
+	   </div>
+	   <!-- 分页end -->

@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>后台管理系统</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0.0"/>
+<meta name="description" content=""/>
+<meta name="author" content=""/>
+<meta http-equiv="pragma" content="no-cache">
+<meta http-equiv="cache-control" content="no-cache">
+
+<link href="$request.getContextPath()/common/metronic.bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+
+<link href="$request.getContextPath()/common/metronic.bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet" type="text/css"/>
+
+<link href="$request.getContextPath()/common/metronic.bootstrap/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
+
+<link href="$request.getContextPath()/common/metronic.bootstrap/css/style-metro.css" rel="stylesheet" type="text/css"/>
+
+<link href="$request.getContextPath()/common/metronic.bootstrap/css/style.css" rel="stylesheet" type="text/css"/>
+
+<link href="$request.getContextPath()/common/metronic.bootstrap/css/style-responsive.css" rel="stylesheet" type="text/css"/>
+
+<link href="$request.getContextPath()/common/metronic.bootstrap/css/default.css" rel="stylesheet" type="text/css" id="style_color"/>
+
+<link href="$request.getContextPath()/common/metronic.bootstrap/css/uniform.default.css" rel="stylesheet" type="text/css"/>
+
+<link href="$request.getContextPath()/common/metronic.bootstrap/css/jquery.gritter.css" rel="stylesheet" type="text/css"/>
+
+<link href="$request.getContextPath()/common/metronic.bootstrap/css/daterangepicker.css" rel="stylesheet" type="text/css" />
+
+<link href="$request.getContextPath()/common/metronic.bootstrap/css/fullcalendar.css" rel="stylesheet" type="text/css"/>
+
+<link href="$request.getContextPath()/common/metronic.bootstrap/css/jqvmap.css" rel="stylesheet" type="text/css" media="screen"/>
+
+<link href="$request.getContextPath()/common/metronic.bootstrap/css/jquery.easy-pie-chart.css" rel="stylesheet" type="text/css" media="screen"/>
+
+<link href="$request.getContextPath()/common/metronic.bootstrap/css/bootstrap-fileupload.css" rel="stylesheet" type="text/css" />
+
+<link href="$request.getContextPath()/common/metronic.bootstrap/css/chosen.css" rel="stylesheet" type="text/css" />
+
+<link href="$request.getContextPath()/common/metronic.bootstrap/css/profile.css" rel="stylesheet" type="text/css" />
+
+<link rel="shortcut icon" href="$request.getContextPath()/common/metronic.bootstrap/image/favicon.ico" />
+
+
+
+<script src="$request.getContextPath()/common/metronic.bootstrap/js/jquery-1.10.1.min.js" type="text/javascript"></script>
+<script src="$request.getContextPath()/common/metronic.bootstrap/js/jquery-migrate-1.2.1.min.js" type="text/javascript"></script>
+
+<script src="$request.getContextPath()/common/metronic.bootstrap/js/jquery-ui-1.10.1.custom.min.js" type="text/javascript"></script>      
+
+<script src="$request.getContextPath()/common/metronic.bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+  
+<script src="$request.getContextPath()/common/metronic.bootstrap/js/jquery.slimscroll.min.js" type="text/javascript"></script>
+
+<script src="$request.getContextPath()/common/metronic.bootstrap/js/jquery.blockui.min.js" type="text/javascript"></script>  
+
+<script src="$request.getContextPath()/common/metronic.bootstrap/js/jquery.cookie.min.js" type="text/javascript"></script>
+
+<script src="$request.getContextPath()/common/metronic.bootstrap/js/jquery.uniform.min.js" type="text/javascript" ></script>
+
+<script src="$request.getContextPath()/common/metronic.bootstrap/js/jquery.validate.min.js" type="text/javascript"></script>
+
+<script type="text/javascript" src="$request.getContextPath()/common/metronic.bootstrap/js/ckeditor.js"></script>  
+
+<script type="text/javascript" src="$request.getContextPath()/common/metronic.bootstrap/js/bootstrap-fileupload.js"></script>
+
+<script type="text/javascript" src="$request.getContextPath()/common/metronic.bootstrap/js/chosen.jquery.min.js"></script>
+
+<script type="text/javascript" src="$request.getContextPath()/common/metronic.bootstrap/js/select2.min.js"></script>
+
+<script type="text/javascript" src="$request.getContextPath()/common/metronic.bootstrap/js/wysihtml5-0.3.0.js"></script> 
+
+<script type="text/javascript" src="$request.getContextPath()/common/metronic.bootstrap/js/bootstrap-wysihtml5.js"></script>
+
+<script type="text/javascript" src="$request.getContextPath()/common/metronic.bootstrap/js/jquery.tagsinput.min.js"></script>
+
+<script type="text/javascript" src="$request.getContextPath()/common/metronic.bootstrap/js/jquery.toggle.buttons.js"></script>
+
+<script type="text/javascript" src="$request.getContextPath()/common/metronic.bootstrap/js/bootstrap-datepicker.js"></script>
+
+<script type="text/javascript" src="$request.getContextPath()/common/metronic.bootstrap/js/bootstrap-datetimepicker.js"></script>
+
+<script type="text/javascript" src="$request.getContextPath()/common/metronic.bootstrap/js/clockface.js"></script>
+
+<script type="text/javascript" src="$request.getContextPath()/common/metronic.bootstrap/js/date.js"></script>
+
+<script type="text/javascript" src="$request.getContextPath()/common/metronic.bootstrap/js/daterangepicker.js"></script> 
+
+<script type="text/javascript" src="$request.getContextPath()/common/metronic.bootstrap/js/bootstrap-colorpicker.js"></script>  
+
+<script type="text/javascript" src="$request.getContextPath()/common/metronic.bootstrap/js/bootstrap-timepicker.js"></script>
+
+<script type="text/javascript" src="$request.getContextPath()/common/metronic.bootstrap/js/jquery.inputmask.bundle.min.js"></script>   
+
+<script type="text/javascript" src="$request.getContextPath()/common/metronic.bootstrap/js/jquery.input-ip-address-control-1.0.min.js"></script>
+
+<script type="text/javascript" src="$request.getContextPath()/common/metronic.bootstrap/js/jquery.multi-select.js"></script>   
+
+<script src="$request.getContextPath()/common/metronic.bootstrap/js/bootstrap-modal.js" type="text/javascript" ></script>
+
+<script src="$request.getContextPath()/common/metronic.bootstrap/js/bootstrap-modalmanager.js" type="text/javascript" ></script> 
+
+<script type="text/javascript" src="$request.getContextPath()/common/metronic.bootstrap/js/chosen.jquery.min.js"></script>
+
+<script src="$request.getContextPath()/common/metronic.bootstrap/js/app.js"></script>
+
+<script src="$request.getContextPath()/common/metronic.bootstrap/js/index.js"></script>     
+</head>
+<body class="page-header-fixed" >
+  <!-- 修改密码框 begin-->
+  #parse("view/back/common/layout/reset_pwd.htm")
+ <!-- 修改密码框 end-->
+	<div class="header navbar navbar-inverse navbar-fixed-top" >
+	    #parse("view/back/common/layout/top.htm")
+	</div>
+    <div class="page-container" style="margin-top:43px;">
+		<div class="page-sidebar nav-collapse collapse">
+		   #parse("view/back/common/layout/left.htm")
+		</div>
+        <div class="page-content" >
+           $screen_content
+        </div>
+    </div>
+</body>
+</html>
+<script type="text/javascript">
+jQuery(document).ready(function() {       
+
+   App.init();
+ //  Index.init();
+   getTabsCookie();
+   
+ 
+});
+var tabs_map  = new Map(); 
+var click_index = -1;
+
+
+/**
+ * 新增tab块
+ */
+function create_tab(r_id,name,url){
+	//判断是否已打开
+   var isOpen  = pdisOpen(name);
+   if(isOpen == false){
+   var array = tabs_map.keySet();
+   var tabs_old_html = "";
+   if(typeof(tabs_map.size)!='undefined' && tabs_map!=null){
+	   for(var i in array) {
+		   tabs_old_html += '<li id="title_'+array[i]+'" onclick="bj('+array[i]+')"><a href="#tab_'+array[i]+'" data-toggle="tab">'+tabs_map.get(array[i]);
+		   if(array[i] != 0){
+			   tabs_old_html += '<button class="close" data-dismiss="alert" onclick="delete_tab('+array[i]+')"></button>';
+		   } 
+		   tabs_old_html += '</a></li>';
+		   $("#tab_"+array[i]).removeClass("active");
+	   }
+   }
+   tabs_map.put(r_id,name);
+   var new_tab = '<li class="active" id="title_'+r_id+'" onclick="bj('+r_id+')"><a href="#tab_'+r_id+'" data-toggle="tab">'+name+
+         '<button class="close" data-dismiss="alert" onclick="delete_tab('+r_id+')"></button></a></li>';
+   var new_tab_div  = '<div class="tab-pane active" id="tab_'+r_id+'" style="height:870px;margin:0px;">'+
+                     '<iframe src="'+url+'" width="100%" height="100%" frameborder="no" border="0" marginwidth="0" marginheight="0" scrolling="no" allowtransparency="no"/> '+
+                     '</div>';
+   click_index = r_id;
+   $("#main_tabs").html(tabs_old_html + new_tab);
+   $("#main_tabdiv").append(new_tab_div);
+   }
+   saveTabsCookie();
+}
+/**
+ * 删除tab块
+ */
+function delete_tab(index){
+	tabs_map.remove(index);
+	$("#title_"+index).remove();  //删除标题
+	$("#tab_"+index).remove();    //删除内容
+	$("#main_tabs li").removeClass("active");
+	$("#main_tabdiv div").removeClass("active");
+	var array = tabs_map.keySet();
+	if((array.length > 0 && click_index == -1) || index == click_index){
+       $("#title_"+array[array.length-1]).addClass("active");
+       $("#tab_"+array[array.length-1]).addClass("active");
+       click_index = array[array.length-1];
+	}else{
+	   $("#title_"+click_index).addClass("active");
+	   $("#tab_"+click_index).addClass("active");
+	}
+	saveTabsCookie();
+}
+/**
+ * 标记点击的模块
+ */
+function bj(index){
+	//判断点击的id在集合中是否存在，避免点击删除误操作
+	var isex = false;
+	var array = tabs_map.keySet();
+	for(var i in array){
+		if(index == array[i]){
+			isex = true;
+		}
+	}
+	if(isex == true){
+		click_index = index;
+	}
+	$.cookie("forum-tabs_clickindex",click_index);
+}
+/**
+ * 判断是否已打开该功能
+ */
+function pdisOpen(name){
+	 var array = tabs_map.keySet();
+	   //判断该菜单是否已经打开，已打开则显示原标签页
+	   for(var i in array){
+		   if(name.trim() == tabs_map.get(array[i]).trim()){
+			   $("#main_tabs li").removeClass("active");
+			   $("#main_tabdiv div").removeClass("active");
+			   $("#title_"+array[i]).addClass("active");
+			   $("#tab_"+array[i]).addClass("active");
+			   return true;
+		   }
+	   }
+	   return false;
+}
+
+
+function Map(){
+this.container = new Object();
+}
+
+
+Map.prototype.put = function(key, value){
+this.container[key] = value;
+}
+
+
+Map.prototype.get = function(key){
+return this.container[key];
+}
+
+
+Map.prototype.keySet = function() {
+var keyset = new Array();
+var count = 0;
+for (var key in this.container) {
+// 跳过object的extend函数
+if (key == 'extend') {
+continue;
+}
+keyset[count] = key;
+count++;
+}
+return keyset;
+}
+
+
+Map.prototype.size = function() {
+var count = 0;
+for (var key in this.container) {
+// 跳过object的extend函数
+if (key == 'extend'){
+continue;
+}
+count++;
+}
+return count;
+}
+
+
+Map.prototype.remove = function(key) {
+delete this.container[key];
+}
+
+
+Map.prototype.toString = function(){
+var str = "";
+for (var i = 0, keys = this.keySet(), len = keys.length; i < len; i++) {
+str = str + keys[i] + "=" + this.container[keys[i]] + ";\n";
+}
+return str;
+}
+
+/**
+ * 把tabs信息保存到cookie
+ */
+function saveTabsCookie(){
+	$.cookie("forum_tabs_title",$("#main_tabs").html());
+	$.cookie("forum-tabs_body",$("#main_tabdiv").html());
+	$.cookie("forum-tabs_map",tabs_map);
+	$.cookie("forum-tabs_clickindex",click_index);
+}
+/**
+ * 把tabs信息填充到tabs
+ */
+function getTabsCookie(){
+	var forum_tabs_title = $.cookie("forum_tabs_title");
+	if(forum_tabs_title != null && forum_tabs_title!="" && typeof(forum_tabs_title)!='undefined'){
+		$("#main_tabs").html($.cookie("forum_tabs_title"));
+		$("#main_tabdiv").html($.cookie("forum-tabs_body"));
+		var map_str  = $.cookie("forum-tabs_map");
+		var arr = map_str.trim().split(";");
+		for(var i=0;i<arr.length;i++){
+			var a = arr[i].trim().split("=");
+			if(a[0]!="" && a[0]!=null && typeof(a[0])!='undefined'){
+			tabs_map.put(a[0],a[1]);
+			}
+		}
+		var cindex = $.cookie("forum-tabs_clickindex");
+	    $("#main_tabs li").removeClass("active");
+	    $("#main_tabdiv div").removeClass("active");
+		$("#title_"+cindex).addClass("active");
+		$("#tab_"+cindex).addClass("active");
+	}else{
+		tabs_map.put(0,"主页");
+	}
+}
+</script>

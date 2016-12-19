@@ -1,0 +1,229 @@
+#set($layout="view/back/common/layout/common_layout.htm")
+<!-- 是否删除 确认框  begin -->
+<div id="isdel_model" class="modal hide in" style="display: none;"  aria-hidden="true" data-backdrop="static">
+ <div class="modal-header">
+    <button class="close" type="button" data-dismiss="modal" id="close_del_model"></button>
+    <h4>
+                    系统提示
+    </h4>
+</div>
+<div class="modal-body">
+   <p style="font-size:18px;">
+            确定删除吗？
+   </p>
+   </div>
+   <div class="modal-footer" style="text-align:center;">
+       <a href="javascript:ok_dele();" class="btn blue" ><i class="icon-ok"></i>确定删除</a>
+       <a href="#isdel_model" data-toggle='modal' class="btn blue" ><i class="icon-remove"></i>取消</a>
+   </div>
+</div>
+<!-- 是否删除 确认框  end -->
+<!-- 表单 begin -->
+<div class="row-fluid">
+	    <div style="margin:20px 20px;text-align:left;height:40px;">
+		<form id="form1" action="$request.getContextPath()/sysmanage/getSysParamList.html" method="post">
+		 <input type="hidden" name="currPage" id="currPage" value="$!page"/>
+		 <span style="font-size:15px;">参数名称 ：</span><input name="pname" id="pname" value="$!pname" class="m-wrap" style="height:35px;" />
+		 <button id="" onclick="subform()" class="btn green"><i class="icon-search"></i> &nbsp;查&nbsp;&nbsp;询&nbsp;</button>
+		 <a id="" data-toggle="modal" href="#edit_param_model" class="btn green"><i class="icon-plus"></i> &nbsp;新增参数&nbsp;</a>
+		</form>
+		</div>
+</div>
+<!-- 表单 end -->
+<!-- 表格 begin -->
+<div class="portlet box" style="margin:0px;">
+<div class="portlet-body">
+<table class="table table-striped table-bordered  table-hover">
+    <thead>
+     <tr>
+        <th>序号</th><th>参数名</th><th>参数值</th><th>描述</th><th>创建时间</th><th>操作</th>
+     </tr>
+    </thead>
+    <tbody>
+      #foreach($param in $paramList)
+      <tr>
+       <td>#set($no=($page - 1) * $size + $velocityCount) $no</td>
+       <td>$!param.param_name</td>
+       <td>$!param.param_value</td>
+       <td>$!param.description</td>
+       <td>$!param.create_time.substring(0,$!param.create_time.indexOf('.'))</td>
+       <td>
+       <a class='btn mini' data-toggle="modal" href="#edit_param_model" onclick='edit($param.id)' type='button'><i class="icon-pencil"></i>编辑</a>&nbsp;
+       <a class='btn purple mini' data-toggle='modal' href='#isdel_model' onclick='bj_del($param.id)' type='button'><i class="icon-trash"></i>删除</a>
+       </td>
+      </tr>
+      #end
+    </tbody>
+</table>
+</div>
+</div>
+<!-- 表格 end -->
+<!-- 分页 begin -->
+<div class="row-fluid">
+  #if($paramList)
+      #if($paramList.size() > 0 )
+          #parse("view/back/common/layout/pagination.htm")
+      #end
+  #end
+</div>
+<!-- 分页 end -->
+<!-- 编辑参数 begin -->
+<div id="edit_param_model" class="modal hide in" style="display: none;"   aria-hidden="true" data-backdrop="static">
+ <div class="modal-header">
+    <button class="close" type="button" data-dismiss="modal" id="close_model"></button>
+    <h4>
+                   编辑参数
+    </h4>
+</div>
+<div class="modal-body">
+<form  class="form-horizontal form-row-seperated">
+      <div class="control-group">
+	    <label class="control-label">参数名称</label>
+		<div class="controls">
+		    <input id="pid" style="display:none;" type="text"/>
+		    <input  class="m-wrap" type="text" value="" size="18" style="height:30px;" id="param_name" name="param_name"></input>
+		</div>
+	  </div>
+	  <div class="control-group">
+	    <label class="control-label">参数值</label>
+		<div class="controls">
+		    <input id="role_id" style="display:none;" type="text"/>
+		    <input id="status" style="display:none;" type="text"/>
+		    <input  class="m-wrap" type="text" value="" size="18" style="height:30px;" id="param_value" name="param_value"></input>
+		</div>
+	  </div>
+	   <div class="control-group last">
+	    <label class="control-label">参数描述</label>
+		<div class="controls">
+		    <textarea  class="m-wrap" rows="3" cols="10" id="description" name="description"></textarea>
+		</div>
+	  </div>
+</form>
+</div>
+<div class="modal-footer" style="text-align:center;">
+    <a href="javascript:ok_add();" id="okAdd" class="btn blue" ><i class="icon-ok"></i>确定新增</a>
+    <a href="javascript:ok_edit();" id="okEdit" class="btn blue" style="display:none;"><i class="icon-ok"></i>确定修改</a>
+    <a onclick="hide_edit_div()" data-toggle="modal" href="#edit_param_model" class="btn blue" ><i class="icon-remove"></i>取消</a>
+</div>
+</div>
+<!-- 编辑参数 end -->
+<script>
+$(document).ready(function(){
+	
+});
+var del_pid = 0;
+/**
+ * 提交表单
+ */
+function subform(){
+	$("#currPage").val("");
+	$("#form1").submit();
+}
+/**
+ * 分页查询
+ */
+function fycx(currPage){
+	$("#currPage").val(currPage);
+	$("#form1").submit();
+}
+/**
+ * 新增参数
+ */
+function addParam(){
+	
+}
+/**
+ * 弹出是否删除框
+ */
+function bj_del(param_id){
+	del_pid = param_id;
+}
+/**
+ * 确定删除
+ */
+function ok_dele(){
+	$.ajax({
+        type: "POST",
+        url: "$request.getContextPath()/sysmanage/delSysParam.html",
+        data:{param_id:del_pid},
+        async: false,
+        success: function(data) {
+        	if(data == "1"){
+        		$("#form1").submit();
+        	}
+        },
+        error: function(request) {
+        }
+    });
+}
+/**
+ * 确定添加
+ */
+function ok_add(){
+	var param_name = $("#param_name").val();
+	var param_value = $("#param_value").val();
+	var description = $("#description").val();
+	$.ajax({
+        type: "POST",
+        url: "$request.getContextPath()/sysmanage/addSysParam.html",
+        data:{param_name:param_name,param_value:param_value,description:description},
+        async: false,
+        success: function(data) {
+        	if(data == "1"){
+        		$("#form1").submit();
+        	}
+        },
+        error: function(request) {
+        }
+    });
+}
+/**
+ * 取消编辑
+ */
+function hide_edit_div(){
+	$("#pid").val("");
+	$("#param_name").val("");
+	$("#param_value").val("");
+	$("#description").val("");
+	$("#okAdd").show();
+	$("#okEdit").hide();
+}
+/**
+ * 准备编辑
+ */
+function edit(param_id){
+	 #foreach($param in $paramList)
+	    var pid = $param.id;
+	    if(pid == param_id){
+	    	$("#pid").val(pid);
+	    	$("#param_name").val("$!param.param_name");
+	    	$("#param_value").val("$!param.param_value");
+	    	$("#description").val("$!param.description");
+	    	$("#okAdd").hide();
+	    	$("#okEdit").show();
+	    }
+	 #end
+}
+/**
+ * 确定修改
+ */
+function ok_edit(){
+	var p_id = $("#pid").val();
+	var param_name = $("#param_name").val();
+	var param_value = $("#param_value").val();
+	var description = $("#description").val();
+	$.ajax({
+        type: "POST",
+        url: "$request.getContextPath()/sysmanage/editSysParam.html",
+        data:{id:p_id,param_name:param_name,param_value:param_value,description:description},
+        async: false,
+        success: function(data) {
+        	if(data == "1"){
+        		$("#form1").submit();
+        	}
+        },
+        error: function(request) {
+        }
+    });
+}
+</script>
